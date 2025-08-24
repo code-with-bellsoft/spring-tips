@@ -13,5 +13,5 @@ The project currently consists of the following modules:
 
 ## Prerequisites
 
-- Java 21
+- Java 21 or later
 - Docker and Docker Compose
