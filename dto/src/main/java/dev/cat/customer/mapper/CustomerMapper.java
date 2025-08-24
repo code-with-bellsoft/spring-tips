@@ -1,9 +1,11 @@
 package dev.cat.customer.mapper;
 import dev.cat.customer.dto.CustomerResponse;
+import dev.cat.customer.dto.OrderResponse;
 import dev.cat.customer.entity.Customer;
-import dev.cat.customer.entity.Order;
+import dev.cat.customer.entity.Status;
 import org.mapstruct.Mapper;
 
+import java.util.List;
 import java.util.Objects;
 
 @Mapper(unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE,
@@ -13,25 +15,27 @@ public abstract class CustomerMapper {
 
     public CustomerResponse mapToCustomerResponse(Customer customer) {
 
-        CustomerResponse.CustomerResponseBuilder response =
-                CustomerResponse.builder()
-                        .id(customer.getId()).name(customer.getName())
-                        .email(customer.getEmail());
+        List<OrderResponse> orderResponses = customer.getOrders()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(OrderMapper.INSTANCE::mapToOrderResponse)
+                .toList();
 
+        double totalExpenses = orderResponses.stream()
+                .filter(Objects::nonNull)
+                .map(OrderResponse::totalPrice)
+                .reduce(0.0, Double::sum);
 
-            response.orders(customer.getOrders()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .map(OrderMapper.INSTANCE::mapToOrderResponse)
-                    .toList());
+        return new CustomerResponse(
+                customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                statusToString(customer.getStatus()),
+                orderResponses,
+                totalExpenses);
+    }
 
-            response.totalExpenses(customer
-                    .getOrders()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .map(Order::getTotalPrice)
-                    .reduce(0.0, Double::sum));
-
-        return response.build();
+    private String statusToString(Status status) {
+        return status.name();
     }
 }

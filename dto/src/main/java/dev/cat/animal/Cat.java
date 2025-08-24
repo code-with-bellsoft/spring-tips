@@ -3,7 +3,7 @@ package dev.cat.animal;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="cats")
+@Table(name="cat")
 public class Cat implements AnimalInterface {
 
 

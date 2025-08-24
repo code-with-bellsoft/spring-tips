@@ -14,29 +14,27 @@ public class Customer {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     List<Order> orders = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     public Customer() {
     }
 
-    public Customer(Long id, String name, String password, String email, List<Order> orders) {
+    public Customer(Long id, String name, String email, String password, List<Order> orders, Status status) {
         this.id = id;
         this.name = name;
-        this.password = password;
         this.email = email;
+        this.password = password;
         this.orders = orders;
+        this.status = status;
     }
 
     public void addOrder(Order order) {
@@ -88,6 +86,14 @@ public class Customer {
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
         return Objects.equals(id, customer.id);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

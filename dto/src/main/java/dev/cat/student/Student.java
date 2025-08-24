@@ -1,25 +1,33 @@
-package dev.cat.employee;
+package dev.cat.student;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
-@Table(name="employee")
-public class Employee {
+@Table(name="student")
+public class Student {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Public.class)
     private Long id;
+
+    @JsonView(Views.Public.class)
     private String name;
+
+    @JsonView(Views.Internal.class)
     private String email;
+
+    @JsonIgnore
     private String password;
 
-    public Employee() {
+
+    public Student() {
     }
 
-    public Employee(Long id, String name, String email, String password) {
+    public Student(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -56,17 +64,5 @@ public class Employee {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

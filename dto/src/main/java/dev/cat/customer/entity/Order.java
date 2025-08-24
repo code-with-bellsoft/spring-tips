@@ -13,7 +13,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total_price")
     private double totalPrice;
 
     @ManyToOne(cascade =
